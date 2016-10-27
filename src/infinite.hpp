@@ -24,9 +24,9 @@ public:
   class const_iterator : public std::iterator<std::forward_iterator_tag, const _Out>
   {
     friend infinite<_Out, _Gen>;
-    infinite<_Out, _Gen> const& container;
+    generator_type const& container;
     std::size_t idx;
-    explicit const_iterator(infinite<_Out, _Gen> const& container, std::size_t idx = std::numeric_limits<std::size_t>()) : container(container), idx(idx) {}
+    explicit const_iterator(generator_type const& container, std::size_t idx = std::numeric_limits<std::size_t>()) : container(container), idx(idx) {}
   
   public:
     const_iterator& operator++()
@@ -48,6 +48,12 @@ public:
   const_iterator begin() const { return const_iterator(*this, 0); }
   const_iterator end() const { return const_iterator(*this); }
 };
+
+template <class _Gen> decltype(auto) make_infinite()
+{
+  _Gen generator;
+  return infinite<decltype(generator(std::size_t {})), _Gen>(std::move(generator));
+}
 
 template <class _Gen> decltype(auto) make_infinite(_Gen&& generator)
 {
