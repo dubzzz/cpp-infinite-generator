@@ -4,11 +4,21 @@
 #include <algorithm>
 #include <vector>
 
-TEST(Infinite, FromBeginning)
+void TestFromBeginning(auto implem)
 {
-  auto infinite_stream = gen::make_infinite([](std::size_t i){ return i % 2; });
+  auto infinite_stream = implem([](std::size_t i){ return i % 2; });
   std::size_t expected[] { 0, 1, 0, 1, 0, 1 };
   ASSERT_EQ(std::end(expected), std::mismatch(std::begin(expected), std::end(expected), infinite_stream.begin()).first);
+}
+
+TEST(Infinite, FromBeginning)
+{
+  TestFromBeginning(&gen::make_infinite);
+}
+
+TEST(Infinite, FromBeginningV2)
+{
+  TestFromBeginning(&gen::v2::make_infinite);
 }
 
 TEST(Infinite, WithOffset)
